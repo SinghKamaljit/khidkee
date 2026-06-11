@@ -2,7 +2,7 @@
   "name": "ਖਿੜਕੀ · Khirkee",
   "short_name": "Khirkee",
   "description": "A window into your family's world — share photos and videos privately",
-  "start_url": "./",
+  "start_url": "/khirkee/",
   "display": "standalone",
   "background_color": "#1a3a1a",
   "theme_color": "#1a3a1a",
@@ -16,3 +16,4 @@
     }
   ]
 }
+
