@@ -710,14 +710,18 @@ document.getElementById("signupBtn").onclick = async () => {
   if (pass.length < 6)    { showError("❌ Password needs at least 6 characters."); btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; return; }
   if (invite !== INVITE_CODE) { showError("❌ Invite code is incorrect."); btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; return; }
   try {
-    const friendCode = await generateUniqueCode(name);
-    const cred       = await createUserWithEmailAndPassword(auth, email, pass);
-    currentUser      = cred.user;
-    // Force token refresh so Firebase DB rules see auth.uid immediately
+    // Step 1: Create auth user first
+    const cred  = await createUserWithEmailAndPassword(auth, email, pass);
+    currentUser = cred.user;
+    // Step 2: Force token so DB rules see auth.uid immediately
     await currentUser.getIdToken(true);
+    // Step 3: NOW generate unique code — user is authenticated so
+    // global_directory read is allowed by "auth != null" rule
+    const friendCode = await generateUniqueCode(name);
     myProfile        = { name, email, friendCode };
     myFriends        = getDefaultFriends();
     lastLoginTimestamp = Date.now();
+    // Step 4: Write both paths — auth is confirmed, no race condition
     await set(ref(db,"users/"+currentUser.uid), { name, email, friendCode, friends:myFriends, lastSeen:Date.now() });
     await set(ref(db,"global_directory/"+friendCode.toLowerCase()), { uid:currentUser.uid, name });
     document.getElementById("signupFields").style.display = "none";
