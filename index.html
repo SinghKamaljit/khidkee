@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-<title>ਖਿੜਕੀ · Khirkee</title>
+<title>ਖਿੜਕੀ · Khidkee</title>
 <meta name="theme-color" content="#1a3a1a"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="Khirkee"/>
+<meta name="apple-mobile-web-app-title" content="Khidkee"/>
 <link rel="manifest" href="manifest.json"/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -446,7 +446,7 @@ body{
   <div class="login-bg-pattern"></div>
   <div class="login-content">
     <div class="login-logo">ਖਿੜਕੀ</div>
-    <div class="login-gurmukhi">Khirkee</div>
+    <div class="login-gurmukhi">Khidkee</div>
     <div class="login-tagline">A WINDOW INTO YOUR FAMILY'S WORLD</div>
 
     <div class="tab-row">
@@ -463,7 +463,7 @@ body{
         <button class="eye-btn" onclick="togglePass('signupPass',this)">👁</button>
       </div>
       <input id="signupInvite" class="login-input" type="text"     placeholder="Invite code" maxlength="20" autocomplete="off"/>
-      <button class="login-btn" id="signupBtn">JOIN KHIRKEE →</button>
+      <button class="login-btn" id="signupBtn">JOIN KHIDKEE →</button>
     </div>
 
     <!-- SIGN IN -->
@@ -479,11 +479,11 @@ body{
 
     <!-- CODE REVEAL -->
     <div id="codeReveal">
-      <div class="code-label">YOUR KHIRKEE CODE — share this with family</div>
+      <div class="code-label">YOUR KHIDKEE CODE — share this with family</div>
       <div class="code-box" id="codeDisplay">----</div>
       <div class="code-hint">Anyone who wants to connect with you will need this code. Save it!</div>
       <button class="code-copy-btn" id="codeCopyBtn">📋 Copy My Code</button>
-      <button class="code-go-btn"   id="codeGoBtn">OPEN KHIRKEE →</button>
+      <button class="code-go-btn"   id="codeGoBtn">OPEN KHIDKEE →</button>
     </div>
 
     <div class="login-error" id="loginError"></div>
@@ -495,7 +495,7 @@ body{
   <div class="app-header">
     <div class="app-title">
       ਖਿੜਕੀ
-      <span>Khirkee · your family window</span>
+      <span>Khidkee · your family window</span>
     </div>
     <div class="header-right">
       <div class="user-badge" id="userBadge">
@@ -525,7 +525,7 @@ body{
       <input id="editLabel" class="edit-input" type="text" placeholder="e.g. Papaji, Mummyji, Veerji…" maxlength="20"/>
     </div>
     <div class="edit-field" id="editCodeField">
-      <div class="edit-label">Their Khirkee code</div>
+      <div class="edit-label">Their Khidkee code</div>
       <input id="editCode" class="edit-input" type="text" placeholder="e.g. KAMAL-4837" maxlength="15" autocomplete="off"/>
     </div>
     <div class="edit-field">
@@ -594,7 +594,7 @@ const firebaseConfig = {
 
 const CLOUDINARY_CLOUD  = "dqwaiio4d";
 const CLOUDINARY_PRESET = "khidkee2025";
-const INVITE_CODE       = "KHIRKEE2025"; // change anytime
+const INVITE_CODE       = "KHIDKEE"; // change anytime
 const TOTAL_CARDS       = 10;
 const MAX_QUEUE         = 5;
 const THREE_DAYS_MS     = 3 * 24 * 60 * 60 * 1000;
@@ -705,10 +705,10 @@ document.getElementById("signupBtn").onclick = async () => {
   const email  = document.getElementById("signupEmail").value.trim();
   const pass   = document.getElementById("signupPass").value;
   const invite = document.getElementById("signupInvite").value.trim().toUpperCase();
-  if (!name)              { showError("❌ Enter your name (at least 2 letters)."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
-  if (!email)             { showError("❌ Enter your email address."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
-  if (pass.length < 6)    { showError("❌ Password needs at least 6 characters."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
-  if (invite !== INVITE_CODE) { showError("❌ Invite code is incorrect."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
+  if (!name)              { showError("❌ Enter your name (at least 2 letters)."); btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; return; }
+  if (!email)             { showError("❌ Enter your email address."); btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; return; }
+  if (pass.length < 6)    { showError("❌ Password needs at least 6 characters."); btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; return; }
+  if (invite !== INVITE_CODE) { showError("❌ Invite code is incorrect."); btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; return; }
   try {
     const friendCode = await generateUniqueCode(name);
     const cred       = await createUserWithEmailAndPassword(auth, email, pass);
@@ -719,7 +719,7 @@ document.getElementById("signupBtn").onclick = async () => {
     await set(ref(db,"users/"+currentUser.uid), { name, email, friendCode, friends:myFriends, lastSeen:Date.now() });
     await set(ref(db,"global_directory/"+friendCode.toLowerCase()), { uid:currentUser.uid, name });
     document.getElementById("signupFields").style.display = "none";
-    showSuccess("✅ Welcome to Khirkee!");
+    showSuccess("✅ Welcome to Khidkee!");
     document.getElementById("codeDisplay").textContent  = friendCode;
     document.getElementById("codeReveal").style.display = "flex";
   } catch(err) {
@@ -728,7 +728,7 @@ document.getElementById("signupBtn").onclick = async () => {
       currentUser = null;
     }
     showError(friendlyAuthError(err.code || err.message));
-  } finally { btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; }
+  } finally { btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; }
 };
 
 document.getElementById("codeCopyBtn").onclick = () => {
@@ -926,7 +926,7 @@ async function loadUnreadCounts() {
     });
     unread.sort((a,b) => b.timestamp - a.timestamp);
     messageQueue.push(...unread.slice(0, MAX_QUEUE));
-  } catch(e) { console.warn("Khirkee: Could not load unread counts:",e.message); }
+  } catch(e) { console.warn("Khidkee: Could not load unread counts:",e.message); }
 }
 
 function updateBadge(senderId, delta) {
@@ -954,9 +954,9 @@ async function cleanupOldMessages() {
     });
     if (del.length) {
       await Promise.all(del);
-      console.log("Khirkee Cleanup: removed",del.length,"old message(s)");
+      console.log("Khidkee Cleanup: removed",del.length,"old message(s)");
     }
-  } catch(e) { console.warn("Khirkee Cleanup failed:",e.message); }
+  } catch(e) { console.warn("Khidkee Cleanup failed:",e.message); }
 }
 
 // ── REALTIME LISTENER ─────────────────────────
@@ -1038,7 +1038,7 @@ document.getElementById("viewerSaveBtn").onclick   = () => {
   if (!currentViewMsg) return;
   const a = document.createElement("a");
   a.href     = currentViewMsg.mediaUrl;
-  a.download = "khirkee-"+currentViewMsg.senderName+"-"+Date.now()+(currentViewMsg.mediaType==="video"?".mp4":".jpg");
+  a.download = "khidkee-"+currentViewMsg.senderName+"-"+Date.now()+(currentViewMsg.mediaType==="video"?".mp4":".jpg");
   a.target   = "_blank";
   a.click();
   toast("⬇ Saving to device…");
@@ -1135,7 +1135,7 @@ document.getElementById("editSaveBtn").onclick = async () => {
   const code  = document.getElementById("editCode").value.trim().toUpperCase();
   const town  = document.getElementById("editTown").value.trim();
   if (!label) { toast("Enter a name for this contact"); return; }
-  if (!code)  { toast("Enter their Khirkee code"); return; }
+  if (!code)  { toast("Enter their Khidkee code"); return; }
   const key = code.toLowerCase();
   if (!/^[a-z]+-\d{4}$/.test(key)) { toast("❌ Code format should be like KAMAL-4837"); return; }
   try {
@@ -1212,7 +1212,7 @@ document.getElementById("historyModal").addEventListener("click", e => { if (e.t
 // Any user still on an old cached version will get
 // a silent forced reload the next time they open the app.
 const APP_VERSION = "1.0.0";
-const VERSION_KEY = "khirkee_version";
+const VERSION_KEY = "khidkee_version";
 
 (function checkVersion() {
   const stored = localStorage.getItem(VERSION_KEY);
