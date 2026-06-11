@@ -1,8 +1,9 @@
 {
-  "name": "ਖਿੜਕੀ · Khirkee",
-  "short_name": "Khirkee",
+  "name": "ਖਿੜਕੀ · Khidkee",
+  "short_name": "Khidkee",
   "description": "A window into your family's world — share photos and videos privately",
-  "start_url": "/khirkee/",
+  "start_url": "/khidkee/",
+  "scope": "/khidkee/",
   "display": "standalone",
   "background_color": "#1a3a1a",
   "theme_color": "#1a3a1a",
@@ -16,4 +17,3 @@
     }
   ]
 }
-
