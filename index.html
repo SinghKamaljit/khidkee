@@ -713,6 +713,8 @@ document.getElementById("signupBtn").onclick = async () => {
     const friendCode = await generateUniqueCode(name);
     const cred       = await createUserWithEmailAndPassword(auth, email, pass);
     currentUser      = cred.user;
+    // Force token refresh so Firebase DB rules see auth.uid immediately
+    await currentUser.getIdToken(true);
     myProfile        = { name, email, friendCode };
     myFriends        = getDefaultFriends();
     lastLoginTimestamp = Date.now();
