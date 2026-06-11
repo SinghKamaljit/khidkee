@@ -733,7 +733,10 @@ document.getElementById("signupBtn").onclick = async () => {
       try { await currentUser.delete(); } catch(e) {}
       currentUser = null;
     }
-    showError(friendlyAuthError(err.code || err.message));
+    // Show full error detail for debugging
+    const code = err.code || "";
+    const msg  = err.message || "Unknown error";
+    showError("❌ [" + code + "] " + msg);
   } finally { btn.disabled=false; btn.textContent="JOIN KHIDKEE →"; }
 };
 
@@ -1217,7 +1220,7 @@ document.getElementById("historyModal").addEventListener("click", e => { if (e.t
 // Change APP_VERSION whenever you push an update.
 // Any user still on an old cached version will get
 // a silent forced reload the next time they open the app.
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.0.2";
 const VERSION_KEY = "khidkee_version";
 
 (function checkVersion() {
