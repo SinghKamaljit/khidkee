@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>ਖਿੜਕੀ · Khirkee</title>
+<meta name="theme-color" content="#1a3a1a"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Khirkee"/>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --forest:   #1a3a1a;
+  --leaf:     #2d6a2d;
+  --sage:     #4a8c4a;
+  --mint:     #7cbd7c;
+  --gold:     #c8941a;
+  --amber:    #e8b840;
+  --straw:    #f5e6a0;
+  --cream:    #fdf8ec;
+  --bark:     #5c3d11;
+  --text:     #1a2a1a;
+  --muted:    #6a7a5a;
+  --border:   #c8d8a8;
+  --surface:  #f0f7e8;
+  --white:    #ffffff;
+  --red:      #c0392b;
+  --card-sh:  0 2px 16px rgba(26,58,26,0.12);
+  --gold-sh:  0 0 18px rgba(200,148,26,0.4);
+}
+*{ box-sizing:border-box; margin:0; padding:0;
+   -webkit-tap-highlight-color:transparent; }
+body{
+  font-family:'Hind',sans-serif;
+  background:var(--cream); color:var(--text);
+  min-height:100vh;
+}
+
+/* ── LOGIN SCREEN ─────────────────────── */
+#loginScreen{
+  position:fixed; inset:0; background:var(--forest); z-index:100;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  gap:16px; padding:28px 24px; overflow-y:auto;
+}
+.login-bg-pattern{
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(200,148,26,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(45,106,45,0.15) 0%, transparent 50%);
+}
+.login-content{ position:relative; z-index:1; width:100%; max-width:340px; display:flex; flex-direction:column; align-items:center; gap:16px; }
+.login-logo{
+  font-family:'Baloo 2',sans-serif; font-size:3rem; font-weight:800;
+  color:var(--amber); text-shadow:0 0 30px rgba(232,184,64,0.4);
+  text-align:center; line-height:1; letter-spacing:-0.5px;
+}
+.login-gurmukhi{
+  font-size:1.1rem; color:var(--mint); opacity:0.85;
+  font-weight:400; letter-spacing:0.05em; margin-top:-4px;
+}
+.login-tagline{ font-size:0.82rem; color:rgba(245,230,160,0.6); text-align:center; letter-spacing:0.08em; }
+.tab-row{ display:flex; gap:8px; width:100%; }
+.tab-btn{
+  flex:1; padding:10px; border-radius:10px;
+  border:1.5px solid rgba(200,148,26,0.3); background:transparent;
+  color:rgba(245,230,160,0.5); font-family:'Baloo 2',sans-serif;
+  font-size:0.88rem; font-weight:700; cursor:pointer; transition:all 0.2s;
+}
+.tab-btn.active{ background:rgba(200,148,26,0.15); border-color:var(--amber); color:var(--amber); }
+#signupFields,#signinFields{
+  display:flex; flex-direction:column; gap:12px; width:100%; align-items:center;
+}
+.login-input{
+  width:100%; background:rgba(255,255,255,0.06); border:1.5px solid rgba(200,148,26,0.25);
+  border-radius:14px; padding:14px 18px; color:var(--straw);
+  font-size:0.97rem; outline:none; font-family:'Hind',sans-serif;
+  -webkit-user-select:text !important; user-select:text !important;
+  transition:border-color 0.2s;
+}
+.login-input:focus{ border-color:var(--amber); }
+.login-input::placeholder{ color:rgba(245,230,160,0.35); }
+.pass-wrap{ position:relative; width:100%; }
+.pass-wrap .login-input{ padding-right:48px; }
+.eye-btn{
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  background:none; border:none; cursor:pointer; font-size:1.1rem; padding:4px; opacity:0.5;
+}
+.eye-btn:active{ opacity:1; }
+.login-btn{
+  width:100%; padding:15px; border:none; border-radius:14px;
+  background:linear-gradient(135deg,var(--gold),var(--amber));
+  color:var(--forest); font-family:'Baloo 2',sans-serif;
+  font-size:1.1rem; font-weight:800; cursor:pointer; letter-spacing:0.02em;
+  box-shadow:var(--gold-sh);
+}
+.login-btn:active{ opacity:0.85; }
+.forgot-btn{
+  background:none; border:none; color:rgba(245,230,160,0.4);
+  font-size:0.8rem; cursor:pointer; text-decoration:underline;
+  font-family:'Hind',sans-serif;
+}
+.login-error{ display:none; font-size:0.85rem; text-align:center; width:100%; padding:4px 0; }
+#codeReveal{
+  display:none; flex-direction:column; align-items:center;
+  gap:12px; width:100%; text-align:center;
+}
+.code-box{
+  background:rgba(200,148,26,0.12); border:2px solid var(--amber);
+  border-radius:16px; padding:18px 24px;
+  font-family:'Baloo 2',sans-serif; font-size:2rem; font-weight:800;
+  color:var(--amber); letter-spacing:3px;
+  text-shadow:0 0 20px rgba(232,184,64,0.4); width:100%;
+}
+.code-label{ color:rgba(245,230,160,0.55); font-size:0.8rem; }
+.code-hint{ color:var(--straw); font-size:0.83rem; line-height:1.5; padding:0 8px; }
+.code-copy-btn{
+  width:100%; padding:13px; border-radius:50px;
+  border:1px solid var(--amber); background:transparent;
+  color:var(--amber); font-family:'Baloo 2',sans-serif;
+  font-size:0.97rem; font-weight:700; cursor:pointer;
+}
+.code-go-btn{
+  width:100%; padding:13px; border-radius:50px; border:none;
+  background:linear-gradient(135deg,var(--gold),var(--amber));
+  color:var(--forest); font-family:'Baloo 2',sans-serif;
+  font-size:1.05rem; font-weight:800; cursor:pointer;
+}
+
+/* ── APP SCREEN ───────────────────────── */
+#appScreen{ display:none; flex-direction:column; min-height:100vh; }
+.app-header{
+  position:sticky; top:0; z-index:10;
+  background:var(--forest);
+  padding:10px 14px; border-bottom:2px solid var(--leaf);
+  display:flex; justify-content:space-between; align-items:center;
+  box-shadow:0 2px 12px rgba(26,58,26,0.3);
+}
+.app-title{
+  font-family:'Baloo 2',sans-serif; font-size:1.5rem; font-weight:800;
+  color:var(--amber); letter-spacing:-0.3px;
+}
+.app-title span{ font-size:0.75rem; color:var(--mint); font-weight:400; display:block; line-height:1; margin-top:-2px; font-family:'Hind',sans-serif; }
+.header-right{ display:flex; gap:8px; align-items:center; }
+.user-badge{
+  display:flex; align-items:center; gap:6px;
+  background:rgba(200,148,26,0.15); border:1px solid rgba(200,148,26,0.4);
+  border-radius:20px; padding:5px 12px;
+  font-family:'Baloo 2',sans-serif; font-size:0.8rem;
+  font-weight:700; color:var(--amber); cursor:pointer; letter-spacing:0.5px;
+}
+.user-dot{ width:7px; height:7px; border-radius:50%; background:var(--mint); box-shadow:0 0 6px var(--mint); }
+.out-btn{
+  background:none; border:1px solid rgba(200,148,26,0.25);
+  border-radius:20px; padding:5px 10px;
+  color:var(--muted); font-size:0.72rem; cursor:pointer;
+}
+
+/* ── INBOX BANNER ─────────────────────── */
+#inboxBanner{
+  display:none; align-items:center; justify-content:space-between;
+  padding:10px 16px; cursor:pointer;
+  background:linear-gradient(135deg,rgba(200,148,26,0.15),rgba(200,148,26,0.07));
+  border-bottom:1px solid rgba(200,148,26,0.3);
+  animation:bannerPulse 2s infinite;
+}
+@keyframes bannerPulse{
+  0%,100%{ background:linear-gradient(135deg,rgba(200,148,26,0.15),rgba(200,148,26,0.07)); }
+  50%{     background:linear-gradient(135deg,rgba(200,148,26,0.25),rgba(200,148,26,0.12)); }
+}
+#inboxBanner.visible{ display:flex; }
+.inbox-text{ font-family:'Baloo 2',sans-serif; font-size:0.95rem; font-weight:700; color:var(--gold); }
+.inbox-tap{ font-family:'Baloo 2',sans-serif; font-size:0.75rem; color:var(--gold); opacity:0.65; letter-spacing:1px; }
+
+/* ── GRID ─────────────────────────────── */
+.grid-container{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; padding:12px 10px 100px; }
+.friend-card{
+  position:relative; background:var(--white);
+  border:1.5px solid var(--border); border-radius:18px;
+  padding:14px 8px 44px; display:flex; flex-direction:column;
+  justify-content:center; align-items:center; text-align:center;
+  aspect-ratio:1/1; cursor:pointer; overflow:hidden; transition:all 0.15s;
+  box-shadow:var(--card-sh);
+}
+.friend-card.has-message{ border-color:var(--gold); animation:glowPulse 2s infinite; }
+.friend-card.empty{ border-style:dashed; opacity:0.6; box-shadow:none; }
+.friend-card.sending{ border-color:var(--sage) !important; animation:sendingPulse 1s infinite !important; }
+@keyframes glowPulse{
+  0%,100%{ box-shadow:0 0 8px rgba(200,148,26,0.2); }
+  50%{     box-shadow:0 0 20px rgba(200,148,26,0.5); }
+}
+@keyframes sendingPulse{
+  0%,100%{ box-shadow:0 0 8px rgba(74,140,74,0.2); }
+  50%{     box-shadow:0 0 18px rgba(74,140,74,0.5); }
+}
+.card-window{
+  font-size:2.2rem; margin-bottom:4px; line-height:1;
+}
+.card-town{
+  font-family:'Baloo 2',sans-serif; font-size:0.95rem;
+  font-weight:700; color:var(--leaf); letter-spacing:0.5px;
+  width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.card-label{
+  font-family:'Baloo 2',sans-serif; font-size:0.82rem;
+  font-weight:600; color:var(--muted);
+  width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.card-status{ font-size:0.67rem; color:var(--muted); width:100%; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-empty-hint{ font-size:0.75rem; color:var(--muted); line-height:1.4; }
+.unread-badge{
+  position:absolute; top:6px; left:6px;
+  min-width:20px; height:20px; border-radius:10px;
+  background:var(--gold); color:var(--forest);
+  font-family:'Baloo 2',sans-serif; font-size:0.72rem; font-weight:800;
+  display:none; align-items:center; justify-content:center;
+  padding:0 5px; box-shadow:0 0 8px rgba(200,148,26,0.5); z-index:4;
+}
+.friend-card.has-message .unread-badge{ display:flex; }
+.edit-btn{
+  position:absolute; top:7px; right:8px;
+  font-size:0.63rem; color:var(--sage);
+  font-family:'Baloo 2',sans-serif; font-weight:700;
+  background:var(--surface); padding:2px 7px; border-radius:20px;
+  border:1px solid var(--border);
+}
+.hist-btn{
+  position:absolute; bottom:8px; left:8px;
+  font-size:0.63rem; color:var(--gold);
+  font-family:'Baloo 2',sans-serif; font-weight:700;
+  background:var(--surface); padding:2px 7px; border-radius:20px;
+  border:1px solid rgba(200,148,26,0.3);
+  display:none;
+}
+.friend-card:not(.empty) .hist-btn{ display:block; }
+.send-btn{
+  position:absolute; bottom:8px; right:8px;
+  font-size:0.63rem; color:var(--white);
+  font-family:'Baloo 2',sans-serif; font-weight:700;
+  background:var(--leaf); padding:3px 9px; border-radius:20px;
+  border:none; cursor:pointer; display:none;
+}
+.friend-card:not(.empty) .send-btn{ display:block; }
+.sending-label{
+  display:none; position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+  font-family:'Baloo 2',sans-serif; font-size:0.7rem;
+  font-weight:700; color:var(--sage); letter-spacing:0.5px; white-space:nowrap;
+}
+.friend-card.sending .send-btn{ display:none; }
+.friend-card.sending .sending-label{ display:block; }
+.msg-dot{
+  position:absolute; top:8px; left:8px;
+  width:9px; height:9px; border-radius:50%;
+  background:var(--gold); display:none; box-shadow:0 0 6px var(--gold);
+}
+.friend-card.has-message .msg-dot{ display:block; }
+
+/* ── EDIT SHEET ───────────────────────── */
+#editModal{
+  display:none; position:fixed; inset:0;
+  background:rgba(26,58,26,0.7); backdrop-filter:blur(4px);
+  z-index:160; align-items:flex-end; justify-content:center;
+}
+#editModal.open{ display:flex; }
+.edit-sheet{
+  background:var(--cream); border:1px solid var(--border);
+  border-radius:24px 24px 0 0; width:100%; max-width:480px; padding:24px 20px 40px;
+}
+.edit-sheet h3{ font-family:'Baloo 2',sans-serif; font-size:1.2rem; color:var(--leaf); margin-bottom:16px; text-align:center; font-weight:800; }
+.edit-field{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.edit-label{ font-size:0.7rem; color:var(--muted); font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+.edit-input{
+  background:var(--white); border:1.5px solid var(--border);
+  border-radius:12px; padding:12px 16px; color:var(--text);
+  font-size:0.95rem; outline:none; font-family:'Hind',sans-serif; width:100%;
+  -webkit-user-select:text !important; user-select:text !important;
+}
+.edit-input:focus{ border-color:var(--sage); }
+.edit-input::placeholder{ color:var(--muted); }
+.edit-save-btn{
+  width:100%; padding:14px; border:none; border-radius:50px;
+  background:linear-gradient(135deg,var(--leaf),var(--sage));
+  color:var(--white); font-family:'Baloo 2',sans-serif; font-size:1.05rem; font-weight:800; cursor:pointer; margin-top:4px;
+}
+.edit-cancel-btn{
+  width:100%; padding:12px; border:1px solid var(--border);
+  border-radius:50px; background:transparent; color:var(--muted);
+  font-family:'Baloo 2',sans-serif; font-size:0.95rem; cursor:pointer; margin-top:8px;
+}
+.edit-clear-btn{
+  width:100%; padding:10px; border:1px solid rgba(192,57,43,0.3);
+  border-radius:50px; background:transparent; color:var(--red);
+  font-family:'Baloo 2',sans-serif; font-size:0.88rem; cursor:pointer; margin-top:6px;
+}
+
+/* ── HISTORY SHEET ────────────────────── */
+#historyModal{
+  display:none; position:fixed; inset:0;
+  background:rgba(26,58,26,0.7); backdrop-filter:blur(4px);
+  z-index:160; align-items:flex-end; justify-content:center;
+}
+#historyModal.open{ display:flex; }
+.history-sheet{
+  background:var(--cream); border:1px solid var(--border);
+  border-radius:24px 24px 0 0; width:100%; max-width:480px;
+  padding:20px 16px 36px; max-height:80vh; display:flex; flex-direction:column;
+}
+.history-sheet h3{ font-family:'Baloo 2',sans-serif; font-size:1.1rem; color:var(--leaf); font-weight:800; margin-bottom:2px; }
+.history-subtitle{ font-size:0.75rem; color:var(--muted); margin-bottom:12px; }
+.history-list{ overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px; }
+.history-item{
+  background:var(--white); border:1px solid var(--border);
+  border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:12px;
+}
+.history-item.history-unread{ border-color:var(--gold); background:rgba(200,148,26,0.05); }
+.history-thumb{
+  width:56px; height:56px; border-radius:10px;
+  object-fit:cover; background:var(--surface); flex-shrink:0;
+  border:1px solid var(--border);
+}
+.history-thumb-video{
+  width:56px; height:56px; border-radius:10px;
+  background:var(--forest); flex-shrink:0; display:flex;
+  align-items:center; justify-content:center; font-size:1.4rem;
+  border:1px solid var(--border);
+}
+.history-item-info{ flex:1; min-width:0; }
+.history-time{ font-size:0.75rem; color:var(--muted); }
+.history-type{ font-family:'Baloo 2',sans-serif; font-size:0.82rem; font-weight:700; color:var(--leaf); }
+.hist-read-badge{ font-size:0.65rem; color:var(--sage); font-weight:600; margin-left:4px; }
+.hist-unread-badge{ font-size:0.65rem; color:var(--gold); font-weight:700; margin-left:4px; }
+.history-view-btn{
+  background:var(--leaf); border:none; border-radius:20px;
+  padding:6px 14px; color:var(--white);
+  font-family:'Baloo 2',sans-serif; font-size:0.75rem; font-weight:700; cursor:pointer;
+  flex-shrink:0;
+}
+.history-empty{ color:var(--muted); font-size:0.88rem; text-align:center; padding:20px 0; }
+.history-close-btn{
+  margin-top:14px; width:100%; padding:12px; border:1px solid var(--border);
+  border-radius:50px; background:transparent; color:var(--muted);
+  font-family:'Baloo 2',sans-serif; font-size:0.95rem; cursor:pointer;
+}
+
+/* ── VIEWER MODAL ─────────────────────── */
+#viewerModal{
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.95); z-index:200;
+  flex-direction:column; align-items:center; justify-content:center;
+}
+#viewerModal.open{ display:flex; }
+.viewer-header{
+  position:absolute; top:0; left:0; right:0;
+  padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.7),transparent);
+}
+.viewer-from{ font-family:'Baloo 2',sans-serif; font-size:0.95rem; font-weight:700; color:var(--amber); }
+.viewer-time{ font-size:0.75rem; color:rgba(255,255,255,0.5); }
+.viewer-close{
+  background:rgba(255,255,255,0.1); border:none; border-radius:50%;
+  width:34px; height:34px; color:#fff; font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+#viewerImage{
+  max-width:100%; max-height:80vh; border-radius:8px;
+  object-fit:contain; display:none;
+}
+#viewerVideo{
+  max-width:100%; max-height:80vh; border-radius:8px;
+  display:none; outline:none;
+}
+.viewer-footer{
+  position:absolute; bottom:0; left:0; right:0;
+  padding:16px; display:flex; gap:10px; justify-content:center;
+  background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);
+}
+.viewer-save-btn{
+  background:var(--gold); border:none; border-radius:50px;
+  padding:10px 24px; color:var(--forest);
+  font-family:'Baloo 2',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer;
+}
+.viewer-dismiss-btn{
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  border-radius:50px; padding:10px 24px; color:#fff;
+  font-family:'Baloo 2',sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer;
+}
+
+/* ── TOAST ────────────────────────────── */
+#toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:var(--forest); color:var(--straw); border:1px solid var(--leaf);
+  border-radius:50px; padding:10px 22px; font-size:0.88rem;
+  font-family:'Hind',sans-serif; z-index:300; opacity:0;
+  transition:all 0.3s; white-space:nowrap; max-width:90vw;
+  text-overflow:ellipsis; overflow:hidden;
+}
+#toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── INSTRUCTIONS BAR ─────────────────── */
+/* ── FIX 3: MICRO-INTERACTIONS ────────────── */
+.friend-card:not(.empty):active{
+  transform:scale(0.96); transition:transform 0.1s ease;
+}
+.send-btn:active{
+  transform:scale(0.93); background:var(--sage);
+  transition:transform 0.1s ease, background 0.1s ease;
+}
+.login-btn,.edit-save-btn,.code-go-btn,.viewer-save-btn{
+  transition:opacity 0.15s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+.login-btn:active,.edit-save-btn:active,.code-go-btn:active,.viewer-save-btn:active{
+  transform:scale(0.97); opacity:0.88;
+}
+.friend-card.sending .sending-label{
+  animation:progressPulse 1.2s ease-in-out infinite;
+}
+@keyframes progressPulse{
+  0%,100%{ opacity:1; } 50%{ opacity:0.45; }
+}
+.unread-badge{ transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+.friend-card.has-message .unread-badge{
+  animation:badgePop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes badgePop{ 0%{ transform:scale(0); } 100%{ transform:scale(1); } }
+#inboxBanner{ transition:opacity 0.3s ease; }
+#inboxBanner:not(.visible){ opacity:0; pointer-events:none; }
+#inboxBanner.visible{ opacity:1; }
+.history-view-btn:active{ transform:scale(0.94); opacity:0.8; transition:transform 0.1s; }
+.viewer-save-btn:active{ transform:scale(0.95); transition:transform 0.1s; }
+.tab-btn{ transition:all 0.2s ease; }
+
+.instructions{
+  text-align:center; font-size:0.73rem; color:var(--muted);
+  padding:6px 16px; background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-bg-pattern"></div>
+  <div class="login-content">
+    <div class="login-logo">ਖਿੜਕੀ</div>
+    <div class="login-gurmukhi">Khirkee</div>
+    <div class="login-tagline">A WINDOW INTO YOUR FAMILY'S WORLD</div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabSignup" onclick="switchTab('signup')">NEW HERE</button>
+      <button class="tab-btn"        id="tabSignin" onclick="switchTab('signin')">SIGN IN</button>
+    </div>
+
+    <!-- SIGN UP -->
+    <div id="signupFields">
+      <input id="signupName"   class="login-input" type="text"     placeholder="Your name (e.g. Papaji, Harpreet)" maxlength="30" autocomplete="name"/>
+      <input id="signupEmail"  class="login-input" type="email"    placeholder="Email address" autocomplete="email"/>
+      <div class="pass-wrap">
+        <input id="signupPass" class="login-input" type="password" placeholder="Password (6+ characters)" autocomplete="new-password"/>
+        <button class="eye-btn" onclick="togglePass('signupPass',this)">👁</button>
+      </div>
+      <input id="signupInvite" class="login-input" type="text"     placeholder="Invite code" maxlength="20" autocomplete="off"/>
+      <button class="login-btn" id="signupBtn">JOIN KHIRKEE →</button>
+    </div>
+
+    <!-- SIGN IN -->
+    <div id="signinFields" style="display:none">
+      <input id="signinEmail" class="login-input" type="email"    placeholder="Email address" autocomplete="email"/>
+      <div class="pass-wrap">
+        <input id="signinPass" class="login-input" type="password" placeholder="Password" autocomplete="current-password"/>
+        <button class="eye-btn" onclick="togglePass('signinPass',this)">👁</button>
+      </div>
+      <button class="login-btn" id="signinBtn">SIGN IN →</button>
+      <button class="forgot-btn" id="forgotBtn">Forgot password?</button>
+    </div>
+
+    <!-- CODE REVEAL -->
+    <div id="codeReveal">
+      <div class="code-label">YOUR KHIRKEE CODE — share this with family</div>
+      <div class="code-box" id="codeDisplay">----</div>
+      <div class="code-hint">Anyone who wants to connect with you will need this code. Save it!</div>
+      <button class="code-copy-btn" id="codeCopyBtn">📋 Copy My Code</button>
+      <button class="code-go-btn"   id="codeGoBtn">OPEN KHIRKEE →</button>
+    </div>
+
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="app-header">
+    <div class="app-title">
+      ਖਿੜਕੀ
+      <span>Khirkee · your family window</span>
+    </div>
+    <div class="header-right">
+      <div class="user-badge" id="userBadge">
+        <div class="user-dot"></div>
+        <span id="headerCode">----</span>
+      </div>
+      <button class="out-btn" id="signoutBtn">Out</button>
+    </div>
+  </div>
+
+  <div class="instructions">Tap a card to send a photo or video · Tap banner to view new arrivals</div>
+
+  <div id="inboxBanner">
+    <div class="inbox-text" id="inboxBannerText">📸 1 new moment</div>
+    <div class="inbox-tap">TAP TO VIEW ›</div>
+  </div>
+
+  <div class="grid-container" id="friendsGrid"></div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal">
+  <div class="edit-sheet">
+    <h3 id="editTitle">Set Up Contact</h3>
+    <div class="edit-field">
+      <div class="edit-label">What do you call this person?</div>
+      <input id="editLabel" class="edit-input" type="text" placeholder="e.g. Papaji, Mummyji, Veerji…" maxlength="20"/>
+    </div>
+    <div class="edit-field" id="editCodeField">
+      <div class="edit-label">Their Khirkee code</div>
+      <input id="editCode" class="edit-input" type="text" placeholder="e.g. KAMAL-4837" maxlength="15" autocomplete="off"/>
+    </div>
+    <div class="edit-field">
+      <div class="edit-label">Their town / city</div>
+      <input id="editTown" class="edit-input" type="text" placeholder="e.g. Amritsar, Ludhiana, Delhi…" maxlength="20"/>
+    </div>
+    <button class="edit-save-btn"   id="editSaveBtn">SAVE →</button>
+    <button class="edit-clear-btn"  id="editClearBtn">Remove this contact</button>
+    <button class="edit-cancel-btn" id="editCancelBtn">Cancel</button>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div id="historyModal">
+  <div class="history-sheet">
+    <h3 id="historyTitle">Moments from —</h3>
+    <div class="history-subtitle">Last 5 · newest first · disappear after 3 days</div>
+    <div class="history-list" id="historyList"></div>
+    <button class="history-close-btn" id="historyCloseBtn">Close</button>
+  </div>
+</div>
+
+<!-- VIEWER MODAL -->
+<div id="viewerModal">
+  <div class="viewer-header">
+    <div>
+      <div class="viewer-from" id="viewerFrom">📸 From —</div>
+      <div class="viewer-time" id="viewerTime"></div>
+    </div>
+    <button class="viewer-close" id="viewerClose">✕</button>
+  </div>
+  <img  id="viewerImage" alt="Shared photo"/>
+  <video id="viewerVideo" controls playsinline></video>
+  <div class="viewer-footer">
+    <button class="viewer-save-btn"    id="viewerSaveBtn">⬇ Save to Device</button>
+    <button class="viewer-dismiss-btn" id="viewerDismissBtn">Close</button>
+  </div>
+</div>
+
+<!-- FILE INPUT (hidden) -->
+<input type="file" id="fileInput" accept="image/*,video/*" capture="environment" style="display:none"/>
+
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendPasswordResetEmail, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getDatabase, ref, set, get, update, push, remove,
+  onChildAdded, query, orderByChild, startAt
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ── CONFIG — replace with your Firebase project ──
+const firebaseConfig = {
+  apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+  authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+  projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+  storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+  databaseURL:       "REPLACE_WITH_YOUR_DATABASE_URL",
+  messagingSenderId: "REPLACE_WITH_YOUR_SENDER_ID",
+  appId:             "REPLACE_WITH_YOUR_APP_ID"
+};
+
+const CLOUDINARY_CLOUD  = "REPLACE_WITH_YOUR_CLOUD_NAME";
+const CLOUDINARY_PRESET = "REPLACE_WITH_YOUR_UPLOAD_PRESET";
+const INVITE_CODE       = "KHIRKEE2025"; // change anytime
+const TOTAL_CARDS       = 10;
+const MAX_QUEUE         = 5;
+const THREE_DAYS_MS     = 3 * 24 * 60 * 60 * 1000;
+const MAX_PHOTO_MB      = 5;
+const MAX_VIDEO_MB      = 30;
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+
+// ── STATE ─────────────────────────────────────
+let currentUser        = null;
+let myProfile          = null;
+let myFriends          = [];
+let lastLoginTimestamp = 0;
+let listenerAttached   = false;
+let messageListenerOff = null;
+let editingIndex       = null;
+let unreadCounts       = {};
+let totalUnreadRaw     = 0;
+let messageQueue       = [];
+let currentViewMsg     = null;
+
+// ── UI HELPERS ────────────────────────────────
+window.switchTab = function(tab) {
+  const su = tab === "signup";
+  document.getElementById("signupFields").style.display = su ? "flex" : "none";
+  document.getElementById("signinFields").style.display = su ? "none" : "flex";
+  document.getElementById("codeReveal").style.display   = "none";
+  document.getElementById("tabSignup").classList.toggle("active",  su);
+  document.getElementById("tabSignin").classList.toggle("active", !su);
+  clearLoginError();
+};
+window.togglePass = function(id, btn) {
+  const el = document.getElementById(id);
+  el.type  = el.type === "password" ? "text" : "password";
+  btn.style.opacity = el.type === "text" ? "1" : "0.5";
+};
+function showError(msg)    { const el=document.getElementById("loginError"); el.style.color="#ff6b6b"; el.textContent=msg; el.style.display="block"; }
+function showSuccess(msg)  { const el=document.getElementById("loginError"); el.style.color="var(--mint)";  el.textContent=msg; el.style.display="block"; }
+function clearLoginError() { document.getElementById("loginError").style.display="none"; }
+function toast(msg, dur)   { const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), dur||3500); }
+function escHtml(s)        { if(!s)return""; return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+
+function friendlyAuthError(code) {
+  return ({
+    "auth/email-already-in-use": "❌ Email already registered. Try signing in.",
+    "auth/invalid-email":        "❌ Invalid email address.",
+    "auth/weak-password":        "❌ Password needs 6+ characters.",
+    "auth/user-not-found":       "❌ No account with that email.",
+    "auth/wrong-password":       "❌ Wrong password.",
+    "auth/invalid-credential":   "❌ Wrong email or password.",
+    "auth/too-many-requests":    "❌ Too many attempts. Try later.",
+    "auth/network-request-failed":"❌ Network error. Check connection.",
+  })[code] || "❌ " + (code || "Unknown error");
+}
+
+function validateName(raw) {
+  if (!raw || !raw.trim()) return null;
+  const t = raw.trim();
+  if (t.replace(/[^a-zA-Z]/g,"").length < 2) return null;
+  return t;
+}
+function makeCodePrefix(name) {
+  const first = name.trim().split(/\s+/)[0] || name;
+  return first.toUpperCase().replace(/[^A-Z]/g,"").slice(0,6) || "USER";
+}
+async function generateUniqueCode(name) {
+  const prefix = makeCodePrefix(name);
+  let code, snap, attempts = 0;
+  do {
+    code = prefix + "-" + String(Math.floor(Math.random()*9000)+1000);
+    snap = await get(ref(db,"global_directory/"+code.toLowerCase()));
+    if (++attempts > 20) throw new Error("Could not generate a unique code");
+  } while (snap.exists());
+  return code;
+}
+function getDefaultFriends() {
+  return Array.from({length:TOTAL_CARDS}, () => ({ id:null, label:"", town:"", code:"", status:"empty" }));
+}
+async function saveUserProfile() {
+  if (!currentUser || !myProfile) return;
+  await set(ref(db,"users/"+currentUser.uid), {
+    name:myProfile.name, email:myProfile.email, friendCode:myProfile.friendCode,
+    friends:myFriends, lastSeen:Date.now()
+  });
+}
+
+// ── LOGIN / SIGNUP ────────────────────────────
+function showLoginScreen() {
+  document.getElementById("appScreen").style.display   = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("signupFields").style.display= "flex";
+  document.getElementById("signinFields").style.display= "none";
+  document.getElementById("codeReveal").style.display  = "none";
+  document.getElementById("tabSignup").classList.add("active");
+  document.getElementById("tabSignin").classList.remove("active");
+  clearLoginError();
+  if (messageListenerOff) { messageListenerOff(); messageListenerOff=null; }
+  currentUser=null; myProfile=null; myFriends=[]; listenerAttached=false;
+  messageQueue.length=0; unreadCounts={}; totalUnreadRaw=0;
+}
+
+document.getElementById("signupBtn").onclick = async () => {
+  const btn = document.getElementById("signupBtn");
+  btn.disabled=true; btn.textContent="Please wait…"; clearLoginError();
+  const name   = validateName(document.getElementById("signupName").value);
+  const email  = document.getElementById("signupEmail").value.trim();
+  const pass   = document.getElementById("signupPass").value;
+  const invite = document.getElementById("signupInvite").value.trim().toUpperCase();
+  if (!name)              { showError("❌ Enter your name (at least 2 letters)."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
+  if (!email)             { showError("❌ Enter your email address."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
+  if (pass.length < 6)    { showError("❌ Password needs at least 6 characters."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
+  if (invite !== INVITE_CODE) { showError("❌ Invite code is incorrect."); btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; return; }
+  try {
+    const friendCode = await generateUniqueCode(name);
+    const cred       = await createUserWithEmailAndPassword(auth, email, pass);
+    currentUser      = cred.user;
+    myProfile        = { name, email, friendCode };
+    myFriends        = getDefaultFriends();
+    lastLoginTimestamp = Date.now();
+    await set(ref(db,"users/"+currentUser.uid), { name, email, friendCode, friends:myFriends, lastSeen:Date.now() });
+    await set(ref(db,"global_directory/"+friendCode.toLowerCase()), { uid:currentUser.uid, name });
+    document.getElementById("signupFields").style.display = "none";
+    showSuccess("✅ Welcome to Khirkee!");
+    document.getElementById("codeDisplay").textContent  = friendCode;
+    document.getElementById("codeReveal").style.display = "flex";
+  } catch(err) {
+    if (currentUser && err.code !== "auth/email-already-in-use") {
+      try { await currentUser.delete(); } catch(e) {}
+      currentUser = null;
+    }
+    showError(friendlyAuthError(err.code || err.message));
+  } finally { btn.disabled=false; btn.textContent="JOIN KHIRKEE →"; }
+};
+
+document.getElementById("codeCopyBtn").onclick = () => {
+  const code = document.getElementById("codeDisplay").textContent;
+  navigator.clipboard.writeText(code).then(()=>toast("📋 "+code+" copied!")).catch(()=>toast("Your code: "+code));
+};
+document.getElementById("codeGoBtn").onclick = async () => {
+  try { await bootApp(currentUser); } catch(e) { showError("❌ Error loading. Please sign in."); }
+};
+
+document.getElementById("signinBtn").onclick = async () => {
+  clearLoginError();
+  const email = document.getElementById("signinEmail").value.trim();
+  const pass  = document.getElementById("signinPass").value;
+  if (!email || !pass) { showError("❌ Enter email and password."); return; }
+  const btn = document.getElementById("signinBtn");
+  btn.disabled=true; btn.textContent="Please wait…";
+  try { const cred=await signInWithEmailAndPassword(auth,email,pass); await bootApp(cred.user); }
+  catch(err) { showError(friendlyAuthError(err.code)); }
+  finally { btn.disabled=false; btn.textContent="SIGN IN →"; }
+};
+document.getElementById("forgotBtn").onclick = async () => {
+  clearLoginError();
+  const email = document.getElementById("signinEmail").value.trim();
+  if (!email) { showError("❌ Enter your email above first."); return; }
+  try { await sendPasswordResetEmail(auth,email); showSuccess("✅ Reset email sent!"); }
+  catch(err) { showError(friendlyAuthError(err.code)); }
+};
+document.getElementById("signoutBtn").onclick = async () => {
+  if (!confirm("Sign out?")) return;
+  try { await signOut(auth); } catch(e) {}
+  showLoginScreen();
+};
+onAuthStateChanged(auth, async(user) => {
+  if (!user) return;
+  if (document.getElementById("appScreen").style.display === "flex") return;
+  if (document.getElementById("codeReveal").style.display === "flex") return;
+  try { await bootApp(user); } catch(e) { await signOut(auth).catch(()=>{}); showLoginScreen(); }
+});
+
+// ── BOOT ─────────────────────────────────────
+async function bootApp(user) {
+  currentUser = user;
+  const snap  = await get(ref(db,"users/"+currentUser.uid));
+  if (!snap.exists()) { await signOut(auth); showLoginScreen(); return; }
+  const data = snap.val();
+  if (!data.name || data.name.trim().length < 2) { await signOut(auth); showLoginScreen(); showError("❌ Account data incomplete. Please register again."); return; }
+  myProfile          = { name:data.name, email:data.email, friendCode:data.friendCode };
+  myFriends          = (data.friends && data.friends.length >= TOTAL_CARDS) ? data.friends : getDefaultFriends();
+  lastLoginTimestamp = data.lastSeen || 0;
+  await update(ref(db,"users/"+currentUser.uid), { lastSeen:Date.now() });
+
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("appScreen").style.display   = "flex";
+  document.getElementById("headerCode").textContent    = myProfile.friendCode;
+  document.getElementById("userBadge").onclick = () =>
+    navigator.clipboard.writeText(myProfile.friendCode).then(()=>toast("📋 "+myProfile.friendCode+" copied!")).catch(()=>toast("Your code: "+myProfile.friendCode));
+
+  await loadUnreadCounts();
+  buildDashboard();
+  if (!listenerAttached) { listenerAttached=true; listenForMessages(); }
+  cleanupOldMessages().catch(e=>console.warn("Cleanup error:",e));
+}
+
+// ── CLOUDINARY UPLOAD (XHR progress + MOV/auto fix) ─────────
+// FIX 4: Resolve real media type from MIME and extension.
+// Handles Apple .MOV, .HEIC and any uncommon mobile wrapper gracefully.
+function resolveMediaType(file) {
+  const name = (file.name || "").toLowerCase();
+  const mime = (file.type || "").toLowerCase();
+  const ext  = name.split(".").pop() || "";
+  const videoExts = ["mov","mp4","mpeg","mpg","avi","webm","3gp","mkv","m4v"];
+  const imageExts = ["jpg","jpeg","png","gif","webp","heic","heif","bmp"];
+  if (mime.startsWith("video/") || videoExts.includes(ext)) return "video";
+  if (mime.startsWith("image/") || imageExts.includes(ext)) return "image";
+  return "auto";
+}
+
+// FIX 1: Uses XMLHttpRequest so real upload % can be reported on the card.
+// FIX 4: Posts to /auto/upload endpoint — Cloudinary detects type itself.
+async function uploadMedia(file, recipientUid, onProgress) {
+  const mediaType = resolveMediaType(file);
+  const isVideo   = mediaType === "video";
+  const maxBytes  = (isVideo ? MAX_VIDEO_MB : MAX_PHOTO_MB) * 1024 * 1024;
+  if (file.size > maxBytes)
+    throw new Error((isVideo?"Video":"Photo")+" too large. Max "+(isVideo?MAX_VIDEO_MB:MAX_PHOTO_MB)+"MB.");
+  const ext      = (file.name||"").split(".").pop() || (isVideo?"mp4":"jpg");
+  const fd       = new FormData();
+  fd.append("file", new File([file], currentUser.uid+"_"+recipientUid+"_"+Date.now()+"."+ext, {type:file.type}));
+  fd.append("upload_preset", CLOUDINARY_PRESET);
+  const endpoint = "https://api.cloudinary.com/v1_1/"+CLOUDINARY_CLOUD+"/auto/upload";
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", endpoint);
+    xhr.upload.addEventListener("progress", e => {
+      if (e.lengthComputable && onProgress)
+        onProgress(Math.round((e.loaded / e.total) * 100));
+    });
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (!data.secure_url) { reject(new Error("No URL in response")); return; }
+          const finalType = data.resource_type === "video" ? "video" : "image";
+          resolve({ url:data.secure_url, type:finalType });
+        } catch(e) { reject(new Error("Invalid response from Cloudinary")); }
+      } else {
+        let detail = "HTTP "+xhr.status;
+        try { const eb=JSON.parse(xhr.responseText); detail=eb.error?.message||detail; } catch(e){}
+        reject(new Error("Upload failed: "+detail));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Network error during upload"));
+    xhr.send(fd);
+  });
+}
+
+// ── SEND ─────────────────────────────────────
+async function sendToOne(friendId, mediaUrl, mediaType) {
+  await set(push(ref(db,"messages/"+friendId)), {
+    from:       currentUser.uid,
+    fromName:   myProfile.name,
+    mediaUrl,
+    mediaType,
+    timestamp:  Date.now(),
+    isRead:     false
+  });
+}
+
+// ── FILE PICKER ───────────────────────────────
+let pendingSendFriend = null;
+let pendingSendCard   = null;
+
+// FIX 2: Desktop-safe camera — remove capture attr on non-touch devices
+// so laptop users get a normal file picker instead of a broken camera call.
+(function applyDesktopFallback() {
+  const fi = document.getElementById("fileInput");
+  const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints > 0);
+  if (!isTouch) fi.removeAttribute("capture");
+})();
+
+// FIX 1 + 3: Progress % on card label, haptic on success
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file || !pendingSendFriend) return;
+  const friend = pendingSendFriend;
+  const card   = pendingSendCard;
+  pendingSendFriend = null; pendingSendCard = null;
+
+  const sl = card ? card.querySelector(".sending-label") : null;
+  if (card) {
+    card.classList.add("sending");
+    if (sl) sl.textContent = "Starting…";
+    // FIX 3: subtle haptic on send tap
+    if (navigator.vibrate) navigator.vibrate(20);
+  }
+
+  // FIX 1: live progress callback updates the card label
+  const onProgress = (pct) => {
+    if (sl) sl.textContent = pct < 100 ? "Uploading "+pct+"%…" : "Finishing…";
+  };
+
+  try {
+    const { url, type } = await uploadMedia(file, friend.id, onProgress);
+    await sendToOne(friend.id, url, type);
+    // FIX 3: success haptic pattern
+    if (navigator.vibrate) navigator.vibrate([60,40,60]);
+    toast("✅ Sent to "+escHtml(friend.label||"contact"));
+  } catch(err) {
+    // FIX 3: error haptic — two sharp pulses
+    if (navigator.vibrate) navigator.vibrate([80,60,80]);
+    toast("❌ "+(err.message||"Failed to send"), 5000);
+  } finally {
+    if (card) { card.classList.remove("sending"); if(sl) sl.textContent=""; }
+  }
+});
+
+// ── UNREAD COUNTS ─────────────────────────────
+async function loadUnreadCounts() {
+  try {
+    const snap = await get(ref(db,"messages/"+currentUser.uid));
+    unreadCounts={}; totalUnreadRaw=0; messageQueue.length=0;
+    if (!snap.exists()) return;
+    const unread = [];
+    snap.forEach(child => {
+      const m = child.val();
+      if (m && !m.isRead) {
+        if (m.from) unreadCounts[m.from] = (unreadCounts[m.from]||0) + 1;
+        if (m.timestamp > lastLoginTimestamp) {
+          totalUnreadRaw++;
+          unread.push({ mediaUrl:m.mediaUrl, mediaType:m.mediaType, senderName:m.fromName, messageId:child.key, senderId:m.from, timestamp:m.timestamp });
+        }
+      }
+    });
+    unread.sort((a,b) => b.timestamp - a.timestamp);
+    messageQueue.push(...unread.slice(0, MAX_QUEUE));
+  } catch(e) { console.warn("Khirkee: Could not load unread counts:",e.message); }
+}
+
+function updateBadge(senderId, delta) {
+  unreadCounts[senderId] = Math.max(0,(unreadCounts[senderId]||0)+delta);
+  const card  = document.querySelector(".friend-card[data-friend-id='"+senderId+"']");
+  if (!card) return;
+  const badge = card.querySelector(".unread-badge"); if(!badge) return;
+  const count = unreadCounts[senderId];
+  badge.textContent = count > 9 ? "9+" : String(count);
+  if (count > 0) { card.classList.add("has-message"); badge.style.display="flex"; }
+  else           { card.classList.remove("has-message"); badge.style.display="none"; }
+}
+
+// ── CLEANUP — messages older than 3 days ─────
+async function cleanupOldMessages() {
+  const CUTOFF = Date.now() - THREE_DAYS_MS;
+  try {
+    const snap = await get(ref(db,"messages/"+currentUser.uid));
+    if (!snap.exists()) return;
+    const del = [];
+    snap.forEach(child => {
+      const m = child.val();
+      if (m && m.timestamp && m.timestamp < CUTOFF)
+        del.push(remove(ref(db,"messages/"+currentUser.uid+"/"+child.key)));
+    });
+    if (del.length) {
+      await Promise.all(del);
+      console.log("Khirkee Cleanup: removed",del.length,"old message(s)");
+    }
+  } catch(e) { console.warn("Khirkee Cleanup failed:",e.message); }
+}
+
+// ── REALTIME LISTENER ─────────────────────────
+function listenForMessages() {
+  const q = query(ref(db,"messages/"+currentUser.uid), orderByChild("timestamp"), startAt(lastLoginTimestamp+1));
+  messageListenerOff = onChildAdded(q, (snap) => {
+    const data = snap.val(); if (!data || data.isRead) return;
+    if (messageQueue.some(m => m.messageId === snap.key)) return;
+    totalUnreadRaw++;
+    if (messageQueue.length < MAX_QUEUE)
+      messageQueue.push({ mediaUrl:data.mediaUrl, mediaType:data.mediaType, senderName:data.fromName, messageId:snap.key, senderId:data.from, timestamp:data.timestamp });
+    updateBadge(data.from, +1);
+    updateInboxBanner();
+    buildDashboard();
+  });
+}
+
+// ── INBOX BANNER ─────────────────────────────
+function updateInboxBanner() {
+  const banner = document.getElementById("inboxBanner");
+  const textEl = document.getElementById("inboxBannerText");
+  const q      = messageQueue.length;
+  if (q === 0) { banner.classList.remove("visible"); return; }
+  const capNote = totalUnreadRaw > q ? " ("+q+" of "+totalUnreadRaw+" loaded)" : "";
+  const word    = q === 1 ? "moment" : "moments";
+  textEl.textContent = "📸 "+q+" new "+word+" waiting"+capNote;
+  banner.classList.add("visible");
+}
+
+document.getElementById("inboxBanner").onclick = () => {
+  if (!messageQueue.length) { updateInboxBanner(); return; }
+  openViewer(messageQueue[0]);
+};
+
+// ── VIEWER ────────────────────────────────────
+async function openViewer(msgObj) {
+  if (!msgObj) return;
+  currentViewMsg = msgObj;
+  document.getElementById("viewerFrom").textContent = (msgObj.mediaType==="video" ? "🎥" : "📸")+" From "+escHtml(msgObj.senderName);
+  document.getElementById("viewerTime").textContent = new Date(msgObj.timestamp).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+
+  const imgEl = document.getElementById("viewerImage");
+  const vidEl = document.getElementById("viewerVideo");
+  imgEl.style.display = "none"; vidEl.style.display = "none";
+  vidEl.pause(); vidEl.src="";
+
+  if (msgObj.mediaType === "video") {
+    vidEl.src = msgObj.mediaUrl; vidEl.style.display = "block";
+  } else {
+    imgEl.src = msgObj.mediaUrl; imgEl.style.display = "block";
+  }
+  document.getElementById("viewerModal").classList.add("open");
+  await markMessageRead(msgObj);
+}
+
+async function markMessageRead(msgObj) {
+  if (!msgObj || !msgObj.messageId) return;
+  try {
+    await update(ref(db,"messages/"+currentUser.uid+"/"+msgObj.messageId), { isRead:true });
+    if (msgObj.senderId) updateBadge(msgObj.senderId, -1);
+    if (totalUnreadRaw > 0) totalUnreadRaw--;
+    const idx = messageQueue.findIndex(m => m.messageId === msgObj.messageId);
+    if (idx !== -1) messageQueue.splice(idx,1);
+    updateInboxBanner();
+    buildDashboard();
+  } catch(e) { console.warn("Could not mark read:",e); }
+}
+
+function closeViewer() {
+  const vidEl = document.getElementById("viewerVideo");
+  vidEl.pause(); vidEl.src="";
+  document.getElementById("viewerModal").classList.remove("open");
+  currentViewMsg = null;
+}
+
+document.getElementById("viewerClose").onclick    = closeViewer;
+document.getElementById("viewerDismissBtn").onclick = closeViewer;
+document.getElementById("viewerSaveBtn").onclick   = () => {
+  if (!currentViewMsg) return;
+  const a = document.createElement("a");
+  a.href     = currentViewMsg.mediaUrl;
+  a.download = "khirkee-"+currentViewMsg.senderName+"-"+Date.now()+(currentViewMsg.mediaType==="video"?".mp4":".jpg");
+  a.target   = "_blank";
+  a.click();
+  toast("⬇ Saving to device…");
+};
+
+// ── DASHBOARD ─────────────────────────────────
+function buildDashboard() {
+  const grid = document.getElementById("friendsGrid");
+  grid.innerHTML = "";
+  updateInboxBanner();
+
+  myFriends.forEach((friend, idx) => {
+    const isEmpty = !friend.id && !friend.label;
+    const card    = document.createElement("div");
+    card.className = "friend-card" + (isEmpty ? " empty" : "");
+    if (friend.id) card.setAttribute("data-friend-id", friend.id);
+
+    if (isEmpty) {
+      card.innerHTML = `
+        <div class="msg-dot"></div>
+        <div class="unread-badge"></div>
+        <div class="edit-btn">EDIT</div>
+        <div class="card-window">🪟</div>
+        <div class="card-empty-hint">Tap EDIT<br>to add contact</div>
+        <div class="hist-btn">HIST</div>
+        <button class="send-btn">📷 SEND</button>
+        <div class="sending-label"></div>`;
+    } else {
+      const count = unreadCounts[friend.id] || 0;
+      card.innerHTML = `
+        <div class="msg-dot"></div>
+        <div class="unread-badge">${count > 9 ? "9+" : count || ""}</div>
+        <div class="edit-btn">EDIT</div>
+        <div class="card-window">${count > 0 ? "📬" : "🪟"}</div>
+        <div class="card-town">${escHtml(friend.town||"—")}</div>
+        <div class="card-label">${escHtml(friend.label||"")}</div>
+        <div class="card-status">${friend.status==="linked" ? "✅ "+escHtml(friend.code||"") : "Tap EDIT to link"}</div>
+        <div class="hist-btn">HIST</div>
+        <button class="send-btn">📷 SEND</button>
+        <div class="sending-label"></div>`;
+      if (count > 0) card.classList.add("has-message");
+    }
+
+    card.querySelector(".edit-btn").addEventListener("click", e => { e.stopPropagation(); openEditSheet(idx); });
+
+    const histBtn = card.querySelector(".hist-btn");
+    if (histBtn) histBtn.addEventListener("click", e => { e.stopPropagation(); openHistorySheet(friend); });
+
+    const sendBtn = card.querySelector(".send-btn");
+    if (sendBtn) sendBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      if (isEmpty)              { toast("Tap EDIT to set up this contact first"); return; }
+      if (!friend.id)           { toast("Tap EDIT to link this contact"); return; }
+      if (card.classList.contains("sending")) return;
+      pendingSendFriend = friend;
+      pendingSendCard   = card;
+      document.getElementById("fileInput").click();
+    });
+
+    // tap card also triggers send (excluding button areas)
+    card.addEventListener("click", e => {
+      if (e.target.classList.contains("edit-btn") || e.target.classList.contains("hist-btn") || e.target.classList.contains("send-btn")) return;
+      if (isEmpty) { toast("Tap EDIT to set up this contact first"); return; }
+      if (!friend.id) { toast("Tap EDIT to link this contact"); return; }
+      if (card.classList.contains("sending")) return;
+      pendingSendFriend = friend;
+      pendingSendCard   = card;
+      document.getElementById("fileInput").click();
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+// ── EDIT SHEET ────────────────────────────────
+function openEditSheet(idx) {
+  editingIndex = idx;
+  const f = myFriends[idx];
+  document.getElementById("editTitle").textContent = "Slot "+(idx+1)+" — "+((f && f.label) ? f.label : "Empty");
+  document.getElementById("editLabel").value = (f && f.label) ? f.label : "";
+  document.getElementById("editCode").value  = (f && f.code)  ? f.code  : "";
+  document.getElementById("editTown").value  = (f && f.town)  ? f.town  : "";
+  document.getElementById("editCodeField").style.display = "flex";
+  document.getElementById("editModal").classList.add("open");
+}
+function closeEditSheet() {
+  document.getElementById("editModal").classList.remove("open");
+  editingIndex = null;
+}
+
+document.getElementById("editSaveBtn").onclick = async () => {
+  if (editingIndex === null) return;
+  const label = document.getElementById("editLabel").value.trim();
+  const code  = document.getElementById("editCode").value.trim().toUpperCase();
+  const town  = document.getElementById("editTown").value.trim();
+  if (!label) { toast("Enter a name for this contact"); return; }
+  if (!code)  { toast("Enter their Khirkee code"); return; }
+  const key = code.toLowerCase();
+  if (!/^[a-z]+-\d{4}$/.test(key)) { toast("❌ Code format should be like KAMAL-4837"); return; }
+  try {
+    const snap = await get(ref(db,"global_directory/"+key));
+    if (!snap.exists())             { toast("❌ No user found with that code"); return; }
+    const entry = snap.val();
+    if (entry.uid === currentUser.uid) { toast("❌ That's your own code!"); return; }
+    myFriends[editingIndex] = { id:entry.uid, label, code, town:town||"", status:"linked" };
+    await saveUserProfile();
+    toast("📡 Connected to "+escHtml(label));
+    closeEditSheet(); buildDashboard();
+  } catch(err) { toast("❌ Lookup failed — check connection"); }
+};
+
+document.getElementById("editClearBtn").onclick = async () => {
+  if (!confirm("Remove this contact?")) return;
+  myFriends[editingIndex] = { id:null, label:"", town:"", code:"", status:"empty" };
+  await saveUserProfile();
+  toast("Contact removed");
+  closeEditSheet(); buildDashboard();
+};
+document.getElementById("editCancelBtn").onclick = closeEditSheet;
+document.getElementById("editModal").addEventListener("click", e => { if (e.target === document.getElementById("editModal")) closeEditSheet(); });
+
+// ── HISTORY SHEET ─────────────────────────────
+async function openHistorySheet(friend) {
+  if (!friend || !friend.id) return;
+  document.getElementById("historyTitle").textContent = "Moments from "+escHtml(friend.label||friend.code);
+  const listEl = document.getElementById("historyList");
+  listEl.innerHTML = '<div class="history-empty">Loading…</div>';
+  document.getElementById("historyModal").classList.add("open");
+  try {
+    const snap = await get(ref(db,"messages/"+currentUser.uid));
+    listEl.innerHTML = "";
+    let matches = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const m = child.val();
+        if (m.from === friend.id) matches.push({ id:child.key, url:m.mediaUrl, type:m.mediaType, time:m.timestamp, isRead:!!m.isRead });
+      });
+    }
+    matches.sort((a,b) => b.time - a.time);
+    const last5 = matches.slice(0,5);
+    if (!last5.length) { listEl.innerHTML='<div class="history-empty">No moments from this contact yet.</div>'; return; }
+    last5.forEach(msg => {
+      const item = document.createElement("div");
+      item.className = "history-item" + (!msg.isRead ? " history-unread" : "");
+      const timeStr = new Date(msg.time).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+      const badge   = msg.isRead ? '<span class="hist-read-badge">✓ SEEN</span>' : '<span class="hist-unread-badge">● NEW</span>';
+      const thumb   = msg.type === "video"
+        ? `<div class="history-thumb-video">🎥</div>`
+        : `<img class="history-thumb" src="${escHtml(msg.url)}" alt="photo"/>`;
+      item.innerHTML = `
+        ${thumb}
+        <div class="history-item-info">
+          <div class="history-type">${msg.type==="video"?"🎥 Video":"📸 Photo"}${badge}</div>
+          <div class="history-time">${timeStr}</div>
+        </div>
+        <button class="history-view-btn">VIEW</button>`;
+      item.querySelector(".history-view-btn").onclick = () => {
+        document.getElementById("historyModal").classList.remove("open");
+        openViewer({ mediaUrl:msg.url, mediaType:msg.type, senderName:friend.label||friend.code, messageId:msg.id, senderId:friend.id, timestamp:msg.time });
+      };
+      listEl.appendChild(item);
+    });
+  } catch(err) { listEl.innerHTML='<div class="history-empty">Could not load moments.</div>'; }
+}
+
+document.getElementById("historyCloseBtn").onclick = () => document.getElementById("historyModal").classList.remove("open");
+document.getElementById("historyModal").addEventListener("click", e => { if (e.target === document.getElementById("historyModal")) document.getElementById("historyModal").classList.remove("open"); });
+
+// ── VERSION CACHE BUSTER ──────────────────────
+// Change APP_VERSION whenever you push an update.
+// Any user still on an old cached version will get
+// a silent forced reload the next time they open the app.
+const APP_VERSION = "1.0.0";
+const VERSION_KEY = "khirkee_version";
+
+(function checkVersion() {
+  const stored = localStorage.getItem(VERSION_KEY);
+  if (stored && stored !== APP_VERSION) {
+    // New version detected — clear caches and reload
+    localStorage.setItem(VERSION_KEY, APP_VERSION);
+    if ("caches" in window) {
+      caches.keys().then(names => {
+        Promise.all(names.map(n => caches.delete(n))).then(() => {
+          window.location.reload(true);
+        });
+      });
+    } else {
+      window.location.reload(true);
+    }
+  } else {
+    localStorage.setItem(VERSION_KEY, APP_VERSION);
+  }
+  // Show version stamp in header
+  const stamp = document.createElement("div");
+  stamp.style.cssText = "position:fixed;bottom:6px;right:10px;font-size:0.6rem;color:rgba(74,140,74,0.45);font-family:monospace;z-index:1;pointer-events:none;";
+  stamp.textContent = "v" + APP_VERSION;
+  document.body.appendChild(stamp);
+})();
+
+</script>
+</body>
+</html>
