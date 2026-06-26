@@ -1273,5 +1273,13 @@ const VERSION_KEY = "khidkee_version";
 })();
 
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js');
+  });
+}
+</script>
 </body>
 </html>

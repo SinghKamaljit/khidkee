@@ -1,19 +1,29 @@
 {
   "name": "ਖਿੜਕੀ · Khidkee",
   "short_name": "Khidkee",
-  "description": "A window into your family's world — share photos and videos privately",
-  "start_url": "/khidkee/",
-  "scope": "/khidkee/",
+  "description": "A window into your family's world",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#1a3a1a",
-  "theme_color": "#1a3a1a",
   "orientation": "portrait",
+  "theme_color": "#1a3a1a",
+  "background_color": "#1a3a1a",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ]
 }
