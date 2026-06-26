@@ -10,7 +10,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Khidkee"/>
 <link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="icon-192.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -600,7 +599,7 @@ const TOTAL_CARDS       = 10;
 const MAX_QUEUE         = 5;
 const THREE_DAYS_MS     = 3 * 24 * 60 * 60 * 1000;
 const MAX_PHOTO_MB      = 5;
-const MAX_VIDEO_MB      = 30;
+const MAX_VIDEO_MB      = 100;
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -1241,15 +1240,6 @@ async function openHistorySheet(friend) {
 
 document.getElementById("historyCloseBtn").onclick = () => document.getElementById("historyModal").classList.remove("open");
 document.getElementById("historyModal").addEventListener("click", e => { if (e.target === document.getElementById("historyModal")) document.getElementById("historyModal").classList.remove("open"); });
-
-// ── SERVICE WORKER REGISTRATION ───────────────
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/khidkee/sw.js", { scope: "/khidkee/" })
-      .then(reg => console.log("SW registered:", reg.scope))
-      .catch(err => console.warn("SW registration failed:", err));
-  });
-}
 
 // ── VERSION CACHE BUSTER ──────────────────────
 // Change APP_VERSION whenever you push an update.
